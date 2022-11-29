@@ -1,0 +1,33 @@
+
+services:
+    jboss:
+      image: quay.io/wildfly/wildfly
+      volumes:
+        - ./target:/opt/jboss/wildfly/standalone/deployments/
+      ports:
+        - 8082:8080
+
+    db:
+      image: mysql
+      environment:
+        MYSQL_ROOT_PASSWORD: 123456
+        MYSQL_DATABASE: marocship
+      volumes:
+        - dbmarocship:/var/lib/mysql
+      ports:
+        - 3307:3306
+
+    phpmyadmin:
+        image: phpmyadmin
+        restart: always
+        ports:
+          - 8083:80
+        environment:
+          - PMA_HOST=db
+          - PMA_PORT=3306
+          - PMA_USER=root
+          - PMA_PASSWORD=123456
+        depends_on:
+          - db
+volumes:
+  dbmarocship:
